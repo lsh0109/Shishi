@@ -1,0 +1,411 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中國經濟發展四大區域翻卡</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px 15px;
+    font-family: "Noto Sans TC", sans-serif;
+    background: #f2f4f8;
+    color: #293746;
+}
+
+h1 {
+    text-align: center;
+    font-size: 25px;
+    margin: 10px 0;
+}
+
+.subtitle {
+    text-align: center;
+    color: #8993a0;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+.container {
+    max-width: 750px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 25px;
+}
+
+/* 卡片 */
+.card {
+    perspective: 1200px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.inner {
+    position: relative;
+    width: 100%;
+    transition: transform 0.65s;
+    transform-style: preserve-3d;
+}
+
+.card.flipped .inner {
+    transform: rotateY(180deg);
+}
+
+.front,
+.back {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    border-radius: 23px;
+    padding: 28px 25px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    box-shadow: 0 6px 20px rgba(35, 55, 80, 0.10);
+    display: flex;
+    flex-direction: column;
+}
+
+.front {
+    background: white;
+    border: 2px solid #dce4ee;
+}
+
+.back {
+    background: #e5efff;
+    border: 2px solid #b6cdef;
+    transform: rotateY(180deg);
+}
+
+h2 {
+    text-align: center;
+    font-size: 24px;
+    margin: 0 0 25px;
+    letter-spacing: 2px;
+}
+
+.content {
+    font-size: 17px;
+    line-height: 2;
+    white-space: pre-line;
+}
+
+.hint {
+    text-align: center;
+    color: #a0a8b3;
+    font-size: 13px;
+    margin-top: auto;
+    padding-top: 25px;
+}
+
+.tag {
+    display: table;
+    margin: 0 auto 15px;
+    padding: 5px 15px;
+    border-radius: 30px;
+    background: #edf2f8;
+    color: #60758e;
+    font-size: 13px;
+}
+
+/* 按鈕 */
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 30px auto;
+    flex-wrap: wrap;
+}
+
+button {
+    border: none;
+    border-radius: 14px;
+    padding: 13px 22px;
+    background: #486f9f;
+    color: white;
+    font-size: 15px;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+button:active {
+    transform: scale(0.96);
+}
+
+.secondary {
+    background: #8798ad;
+}
+
+/* 電腦版雙欄 */
+@media (min-width: 750px) {
+    .container {
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<h1>中國經濟發展四大區域</h1>
+<p class="subtitle">點擊卡片翻面｜填空複習</p>
+
+<div class="container" id="cards"></div>
+
+<div class="buttons">
+    <button onclick="resetCards()">全部翻回正面</button>
+    <button class="secondary" onclick="shuffleCards()">重新排列</button>
+</div>
+
+<script>
+
+const data = [
+
+{
+    title: "東部｜率先發展",
+    front: `
+優勢：
+
+1. __________
+
+2. __________
+
+3. __________
+
+發展：__________
+
+重要樞紐：__________
+`,
+    back: `
+優勢：
+
+1. 勞力充足
+
+2. 交通便利
+
+3. 因開放最早，工商業最為發達
+
+發展：高科技產業
+
+重要樞紐：湖北省武漢火車站
+`
+},
+
+{
+    title: "中部｜崛起",
+    front: `
+優勢：
+
+1. __________
+
+2. __________
+
+3. __________
+
+缺點：__________
+
+行業：
+
+1. __________
+
+2. __________
+
+重要樞紐：__________
+`,
+    back: `
+優勢：
+
+1. 煤礦資源豐富
+
+2. 糧食產量高
+
+3. 工資低廉
+
+缺點：內陸地區，位於東西部樞紐
+
+行業：
+
+1. 製造業
+
+2. 高科技產業
+
+重要樞紐：湖北省武漢火車站
+`
+},
+
+{
+    title: "東北｜振興",
+    front: `
+優勢：__________
+
+缺點：
+
+1. __________
+
+2. __________
+
+推動轉型：
+
+1. __________
+
+2. __________
+
+同步帶動：__________
+
+案例：__________
+`,
+    back: `
+優勢：早期礦產資源豐富，傳統重工業中心
+
+缺點：
+
+1. 礦產資源枯竭
+
+2. 工廠設備老舊
+
+推動轉型：
+
+1. 新興能源
+
+2. 汽車產業
+
+同步帶動：旅遊業
+
+案例：遼寧撫順煤礦坑轉型博物館
+`
+},
+
+{
+    title: "西部｜大開發",
+    front: `
+優勢：__________
+
+缺點：__________
+
+資源西送：
+
+1. __________
+
+2. __________
+`,
+    back: `
+優勢：擁有豐富自然資源
+
+缺點：交通不便，工商業發展較慢
+
+資源西送：
+
+1. 西氣東輸
+
+2. 西電東送
+`
+}
+
+];
+
+const container = document.getElementById("cards");
+
+function createCards(items) {
+
+    container.innerHTML = "";
+
+    items.forEach((item, index) => {
+
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+            <div class="inner">
+
+                <div class="front">
+                    <div class="tag">填空複習</div>
+                    <h2>${item.title}</h2>
+                    <div class="content">${item.front}</div>
+                    <div class="hint">點擊卡片翻面 ↻</div>
+                </div>
+
+                <div class="back">
+                    <div class="tag">答案</div>
+                    <h2>${item.title}</h2>
+                    <div class="content">${item.back}</div>
+                    <div class="hint">點擊卡片翻回 ↻</div>
+                </div>
+
+            </div>
+        `;
+
+        card.onclick = () => {
+            card.classList.toggle("flipped");
+        };
+
+        container.appendChild(card);
+    });
+
+    adjustHeight();
+}
+
+/* 自動調整卡片高度 */
+function adjustHeight() {
+
+    document.querySelectorAll(".card").forEach(card => {
+
+        const front = card.querySelector(".front");
+        const back = card.querySelector(".back");
+        const inner = card.querySelector(".inner");
+
+        // 先解除高度限制，方便測量
+        card.style.height = "auto";
+        inner.style.height = "auto";
+
+        const frontHeight = front.scrollHeight;
+        const backHeight = back.scrollHeight;
+
+        const height = Math.max(frontHeight, backHeight);
+
+        card.style.height = height + "px";
+        inner.style.height = height + "px";
+
+    });
+}
+
+/* 全部翻回 */
+function resetCards() {
+    document.querySelectorAll(".card").forEach(card => {
+        card.classList.remove("flipped");
+    });
+}
+
+/* 隨機排列 */
+function shuffleCards() {
+
+    const shuffled = [...data];
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+
+        const j = Math.floor(Math.random() * (i + 1));
+
+        [shuffled[i], shuffled[j]] =
+        [shuffled[j], shuffled[i]];
+
+    }
+
+    createCards(shuffled);
+}
+
+/* 初始化 */
+createCards(data);
+
+/* 螢幕大小改變時重新調整 */
+window.addEventListener("resize", adjustHeight);
+
+</script>
+
+</body>
+</html>
